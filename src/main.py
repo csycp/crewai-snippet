@@ -26,6 +26,12 @@ def main():
         tools=[search_tool],
     )
 
+    post_writer = Agent(
+        role="Instagram post writer",
+        goal="People quickly and easily understand complex AI-related information.",
+        backstory="AI-related articles are being published incredibly quickly, and people find it hard to keep up with this information. You need to become a portal that makes it easy for people to access this information.",
+    )
+
     research_about_AI = Task(
         description="research the top five most influential AI-related news topics in Korea as of today.",
         expected_output="A comprehensive list of 5 news on the latest AI trends.",
@@ -33,9 +39,16 @@ def main():
         tools=[search_tool],
     )
 
+    write_instagram_post = Task(
+        description="You will receive five AI-related articles today. You need to create Instagram posts in Korean from these articles that are intuitive and witty, making them quick to read and easy to understand for people.",
+        expected_output="A long text where each article is separated by line breaks, with titles and content distinctly organized.",
+        agent=post_writer,
+    )
+
     crew = Crew(
-        agents=[researcher],
-        tasks=[research_about_AI],
+        agents=[researcher, post_writer],
+        tasks=[research_about_AI, write_instagram_post],
+        share_crew=True,
     )
 
     result = crew.kickoff()
